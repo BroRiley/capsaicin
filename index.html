@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Capsaicin 3D</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Capsaicin 3D (v3)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{--bg:#f1f3f5;--fg:#1b1d20;--panel:rgba(255,255,255,.88);--bd:#c9ced4;--ac:#d32f2f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -46,7 +46,7 @@ B.forEach(([i,j,o])=>{const p=V(A[i]),q=V(A[j]),mid=p.clone().add(q).multiplySca
 function spr(text,font,fg,bg,sc){const c=document.createElement('canvas'),x=c.getContext('2d');x.font=font;const w=Math.ceil(x.measureText(text).width)+28,h=72;c.width=w;c.height=h;x.font=font;x.textAlign='center';x.textBaseline='middle';
  if(bg){x.fillStyle=bg;x.beginPath();x.roundRect?x.roundRect(2,6,w-4,h-12,20):x.rect(2,6,w-4,h-12);x.fill()}else{x.lineWidth=7;x.strokeStyle='rgba(0,0,0,.85)';x.strokeText(text,w/2,h/2)}
  x.fillStyle=fg;x.fillText(text,w/2,h/2);const t=new THREE.CanvasTexture(c),s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true}));s.scale.set(sc*w/h,sc,1);s.renderOrder=10;return s}
-['C','H','N','O'].forEach(e=>{const ai=e==='H'?A.findIndex((x,k)=>x[0]==='H'&&B.some(b=>b[0]===20&&b[1]===k)):{C:20,N:14,O:16}[e],a=A[ai],nm={C:'Carbon',H:'Hydrogen',N:'Nitrogen',O:'Oxygen'}[e],g=aL,p=V(a),pos=p.clone().add(new THREE.Vector3(...{C:[0,-2.2],H:[1.5,2.2],N:[-.5,-2.5],O:[1.5,2.5]}[e],0));const s=spr(nm,'bold 50px system-ui,sans-serif','#fff','rgba(20,22,26,.94)',.7);s.position.copy(pos);g.add(s);g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([p,pos]),new THREE.LineBasicMaterial({color:0x333333,depthTest:false})))});
+const elemLabels=[];['C','H','N','O'].forEach(e=>{const ai=e==='H'?A.findIndex((x,k)=>x[0]==='H'&&B.some(b=>b[0]===20&&b[1]===k)):{C:20,N:14,O:16}[e],a=A[ai],nm={C:'Carbon',H:'Hydrogen',N:'Nitrogen',O:'Oxygen'}[e],g=aL,p=V(a),pos=p.clone().add(new THREE.Vector3(...{C:[0,-2.2],H:[1.5,2.2],N:[-.5,-2.5],O:[1.5,2.5]}[e],0));const s=spr(nm,'bold 50px system-ui,sans-serif','#fff','rgba(20,22,26,.94)',.7);s.position.copy(pos);const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints([p,pos]),new THREE.LineBasicMaterial({color:0x333333,depthTest:false}));g.add(s);g.add(ln);elemLabels.push(s,ln)});
 const cen=new THREE.Vector3(0,0,0);
 G.forEach(([name,ids,o])=>{const c=new THREE.Vector3();ids.forEach(i=>c.add(V(A[i])));c.divideScalar(ids.length);
  const pos=c.clone().add(new THREE.Vector3(o[0],o[1],1.5));
@@ -58,7 +58,7 @@ addEventListener('resize',()=>{fit();reset()});fit();reset();
 function bg(){R.setClearColor(0xd3d8df,1)}
 bg();matchMedia('(prefers-color-scheme:dark)').addEventListener('change',bg);
 const tg=(id,fn)=>{const b=document.getElementById(id);b.onclick=()=>{b.classList.toggle('on');fn(b.classList.contains('on'))}};
-gL.visible=false;tg('bl',v=>aL.visible=v);tg('bg',v=>gL.visible=v);
+gL.visible=false;tg('bl',v=>elemLabels.forEach(o=>o.visible=v));tg('bg',v=>gL.visible=v);
 document.getElementById('bv').onclick=reset;
 (function loop(){requestAnimationFrame(loop);ctl.update();R.render(S,cam)})();
 </script></body></html>
